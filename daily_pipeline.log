@@ -177,3 +177,29 @@
 2026-08-16 19:19:36,910 [INFO] ==================================================
 2026-08-16 19:19:36,911 [INFO] DhawalKart Daily Pipeline Completed Successfully!
 2026-08-16 19:19:36,911 [INFO] ==================================================
+2026-08-16 19:20:13,445 [INFO] ==================================================
+2026-08-16 19:20:13,445 [INFO] Starting DhawalKart Daily Business Analyst Pipeline
+2026-08-16 19:20:13,445 [INFO] ==================================================
+2026-08-16 19:20:13,445 [INFO] Step 1: Generating/Verifying daily record for '2026-08-16' (Event: None)...
+2026-08-16 19:20:13,455 [INFO] Daily Data Ready: Traffic=5553, Revenue=₹73,605.17, Orders=143
+2026-08-16 19:20:13,455 [INFO] Step 2: Performing deterministic analysis and anomaly detection...
+2026-08-16 19:20:13,457 [INFO] Analysis Complete: 5 anomalies detected across 8 metrics.
+2026-08-16 19:20:13,457 [INFO] Step 3: Sending structured findings to LLM Business Analyst...
+2026-08-16 19:20:13,477 [INFO] LLM Analyst summary generated successfully.
+2026-08-16 19:20:13,477 [INFO] Step 4: Rendering HTML email report and attempting dispatch...
+2026-08-16 19:20:16,794 [INFO] ==================================================
+2026-08-16 19:20:16,795 [INFO] DhawalKart Daily Pipeline Completed Successfully!
+2026-08-16 19:20:16,795 [INFO] ==================================================
+2026-08-16 19:20:21,519 [INFO] ==================================================
+2026-08-16 19:20:21,520 [INFO] Starting DhawalKart Daily Business Analyst Pipeline
+2026-08-16 19:20:21,520 [INFO] ==================================================
+2026-08-16 19:20:21,520 [INFO] Step 1: Generating/Verifying daily record for '2026-08-17' (Event: successful_promotion)...
+2026-08-16 19:20:21,540 [INFO] Daily Data Ready: Traffic=7761, Revenue=₹130,605.42, Orders=243
+2026-08-16 19:20:21,540 [INFO] Step 2: Performing deterministic analysis and anomaly detection...
+2026-08-16 19:20:21,541 [INFO] Analysis Complete: 8 anomalies detected across 8 metrics.
+2026-08-16 19:20:21,542 [INFO] Step 3: Sending structured findings to LLM Business Analyst...
+2026-08-16 19:20:21,553 [INFO] LLM Analyst summary generated successfully.
+2026-08-16 19:20:21,553 [INFO] Step 4: Rendering HTML email report and attempting dispatch...
+2026-08-16 19:20:24,839 [INFO] ==================================================
+2026-08-16 19:20:24,839 [INFO] DhawalKart Daily Pipeline Completed Successfully!
+2026-08-16 19:20:24,840 [INFO] ==================================================
