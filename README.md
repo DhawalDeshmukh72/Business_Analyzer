@@ -8,7 +8,7 @@
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-Automation-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-*An autonomous e-commerce daily business analyst system built from scratch for **DhawalKart**. Generates realistic metric streams, calculates multi-period baseline anomalies in Python, interprets findings with LLMs (Ollama / OpenAI), and dispatches executive HTML digests automatically every day.*
+*An autonomous e-commerce daily business analyst system built from scratch for **DhawalKart**. Generates realistic metric streams, calculates multi-period baseline anomalies in Python, interprets findings with LLMs (Ollama / Local AI & Fallback Engine), and dispatches executive HTML digests automatically every day.*
 
 ---
 
@@ -34,7 +34,7 @@ DhawalKart Store Data ➔ Daily Generator ➔ SQLite / CSV Datastore ➔ Python 
 
 - **⚡ Deterministic Business Engine**: All mathematical calculations (vs Yesterday, 7-day average, 30-day average) are executed in pure Python—guaranteeing 100% factual accuracy without LLM calculation errors.
 - **🎯 Rule-Based Anomaly Detection**: Configurable change thresholds (**±10% Noteworthy**, **±20% Significant**, **±30% Major**) classify metric movements dynamically.
-- **🤖 Dual LLM Integration**: Supports local open-source models via **Ollama** (`llama3`, `mistral`) for $0 cost, **OpenAI API** (`gpt-4o-mini`), and an offline deterministic fallback.
+- **🤖 LLM Integration**: Supports local open-source models via **Ollama** (`llama3`, `mistral`) for $0 cost, as well as an offline deterministic fallback engine.
 - **📧 Executive HTML Email Reports**: Delivers responsive email digests with color-coded severity badges, formatted count metrics (integers without decimals), and clear section breakdowns.
 - **⏰ 24/7 Cloud Automation**: Built-in GitHub Actions workflow (`daily_report.yml`) executes daily reports on cloud servers without needing your computer to stay on.
 - **🧪 Business Event Simulator**: Built-in CLI generator for testing real-world business scenarios (`marketing_campaign`, `website_problem`, `payment_failure`, `product_quality_problem`, `successful_promotion`).
@@ -53,10 +53,8 @@ flowchart TD
     E -->|Structured Findings| F[LLM Analyst Layer]
     F -->|Query| G{LLM Provider}
     G -->|Option 1| H[Ollama Local AI]
-    G -->|Option 2| I[OpenAI API]
-    G -->|Option 3| J[Offline Fallback Engine]
+    G -->|Option 2| J[Offline Fallback Engine]
     H --> K[HTML Email Generator]
-    I --> K
     J --> K
     K -->|SMTP Dispatch| L[Executive Email Inbox]
 ```
@@ -100,12 +98,9 @@ pip install -r requirements.txt
 Create a `.env` file in the project root:
 
 ```env
-# LLM Provider Configuration (options: ollama, openai, fallback)
+# LLM Provider Configuration (options: ollama, fallback)
 LLM_PROVIDER=ollama
 OLLAMA_MODEL=llama3
-
-# Optional OpenAI API Key
-# OPENAI_API_KEY=sk-your-openai-api-key-here
 
 # Email Configuration (SMTP)
 SMTP_SERVER=smtp.gmail.com
@@ -160,7 +155,6 @@ Go to your repository **Settings ➔ Secrets and variables ➔ Actions ➔ New r
 1. `EMAIL_ADDRESS`: Your sender Gmail address.
 2. `EMAIL_PASSWORD`: Your 16-character Google App Password.
 3. `RECIPIENT_EMAIL`: Target email inbox for receiving daily reports.
-4. `OPENAI_API_KEY`: *(Optional)* If using OpenAI instead of Ollama/fallback.
 
 ---
 
@@ -173,7 +167,7 @@ Business_Analyzer/
 │       └── daily_report.yml       # GitHub Actions 24/7 cloud scheduler
 ├── daily_data_generator.py        # 30-day historical & daily row generator + event simulator
 ├── analysis_engine.py             # Deterministic baseline calculator & rule classifier
-├── llm_analyst.py                 # LLM Analyst layer (Ollama / OpenAI / Fallback)
+├── llm_analyst.py                 # LLM Analyst layer (Ollama / Fallback)
 ├── email_reporter.py              # Responsive HTML email reporter & SMTP dispatcher
 ├── database.py                    # SQLite persistent datastore module
 ├── main.py                        # Master pipeline orchestrator & CLI

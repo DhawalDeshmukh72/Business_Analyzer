@@ -90,7 +90,7 @@ def generate_llm_analysis(
     provider: Optional[str] = None
 ) -> str:
     """
-    Sends structured findings to the designated LLM provider (ollama, openai, gemini, or fallback).
+    Sends structured findings to the designated LLM provider (ollama or fallback).
     """
     provider = provider or os.getenv("LLM_PROVIDER", "ollama").lower()
     prompt = build_analyst_prompt(findings_data)
@@ -104,27 +104,7 @@ def generate_llm_analysis(
             return output
         print("[Notice] Falling back to natural analyst report because Ollama server is not running.")
 
-    # 2. Try OpenAI if selected or key present
-    openai_key = os.getenv("OPENAI_API_KEY")
-    if provider == "openai" or (provider == "ollama" and openai_key):
-        if openai_key:
-            try:
-                import openai
-                print("[LLM] Querying OpenAI API (gpt-4o-mini)...")
-                client = openai.OpenAI(api_key=openai_key)
-                response = client.chat.completions.create(
-                    model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
-                    messages=[
-                        {"role": "system", "content": SYSTEM_PROMPT},
-                        {"role": "user", "content": prompt}
-                    ],
-                    temperature=0.3
-                )
-                return response.choices[0].message.content
-            except Exception as e:
-                print(f"[Warning] OpenAI API call failed: {e}")
-
-    # 3. Fallback mock analyst report
+    # 2. Fallback mock analyst report
     return generate_mock_analysis(findings_data)
 
 
