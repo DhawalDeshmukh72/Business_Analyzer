@@ -7,6 +7,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+INTEGER_METRICS = {"traffic", "orders", "refunds", "new_customers"}
+
+def fmt_val(metric: str, val: float) -> str:
+    """Formats count metrics as integers and currency/rates with appropriate decimals."""
+    if metric in INTEGER_METRICS:
+        return f"{int(round(val)):,}"
+    return f"{val:,.2f}"
+
 SYSTEM_PROMPT = """You are an expert e-commerce business analyst writing a daily report for DhawalKart.
 Your job is to analyze today's performance based strictly on factual calculations provided by Python.
 
@@ -15,6 +23,7 @@ Strict Guidelines:
 2. Factual Accuracy: Use ONLY the numbers and percentage changes explicitly provided. NEVER invent numbers.
 3. Metric Relationships: Explain HOW metrics connect naturally (e.g., "Revenue grew today driven mostly by higher order conversions rather than raw traffic").
 4. Distinguish Facts from Hypotheses: State calculated changes as facts, and state interpretations gently (e.g., "Hypothesis: ...", "Possible reason: ...").
+5. INTEGER METRICS: For count metrics (Website Traffic, Orders, Refunds, New Customers), state values as whole numbers (e.g., 5,553 visits, 143 orders, 4 refunds, 93 customers), never with decimal places (.00).
 
 Structure your markdown response cleanly using these exact section headers:
 ### Executive Summary
@@ -34,10 +43,14 @@ def build_analyst_prompt(findings_data: Dict[str, Any]) -> str:
 
     prompt += "Detailed Metric Findings:\n"
     for f in findings:
+        val_str = fmt_val(f['metric'], f['today_value'])
+        yest_str = fmt_val(f['metric'], f['yesterday_value'])
+        avg7_str = fmt_val(f['metric'], f['avg_7d'])
+        avg30_str = fmt_val(f['metric'], f['avg_30d'])
         prompt += (
-            f"- {f['display_name']}: Today = {f['today_value']:,.2f} | Yesterday = {f['yesterday_value']:,.2f} "
-            f"({f['pct_vs_yesterday']:+.2f}%) | 7d Avg = {f['avg_7d']:,.2f} ({f['pct_vs_7d']:+.2f}%) | "
-            f"30d Avg = {f['avg_30d']:,.2f} ({f['pct_vs_30d']:+.2f}%) | Severity = {f['severity']}\n"
+            f"- {f['display_name']}: Today = {val_str} | Yesterday = {yest_str} "
+            f"({f['pct_vs_yesterday']:+.2f}%) | 7d Avg = {avg7_str} ({f['pct_vs_7d']:+.2f}%) | "
+            f"30d Avg = {avg30_str} ({f['pct_vs_30d']:+.2f}%) | Severity = {f['severity']}\n"
         )
 
     prompt += "\nPlease write a warm, concise, human daily analysis report for the founder of DhawalKart."
@@ -116,9 +129,8 @@ def generate_llm_analysis(
 
 
 def generate_mock_analysis(findings_data: Dict[str, Any]) -> str:
-    """Generates a warm, natural human-like analyst report without 'Areas of Concern'."""
+    """Generates a warm, natural human-like analyst report with clean integer formatting for count metrics."""
     date_str = findings_data.get("analysis_date", "Today")
-    anomalies = findings_data.get("anomalies", [])
     findings = findings_data.get("findings", [])
 
     metric_map = {f['metric']: f for f in findings}
@@ -128,12 +140,12 @@ def generate_mock_analysis(findings_data: Dict[str, Any]) -> str:
 
     report = f"### Executive Summary\n"
     report += f"Good morning! Here is your daily performance summary for **DhawalKart** on **{date_str}**.\n\n"
-    report += f"Revenue reached **₹{rev.get('today_value', 0):,.2f}** ({rev.get('pct_vs_yesterday', 0):+.1f}% vs yesterday), with total website traffic at **{trf.get('today_value', 0):,.0f} visitors** and **{ord_.get('today_value', 0):,.0f} completed orders**.\n"
+    report += f"Revenue reached **₹{rev.get('today_value', 0):,.2f}** ({rev.get('pct_vs_yesterday', 0):+.1f}% vs yesterday), with total website traffic at **{int(round(trf.get('today_value', 0))):,} visitors** and **{int(round(ord_.get('today_value', 0))):,} completed orders**.\n"
 
     report += "\n### Key Performance Highlights & Metric Stories\n"
     report += f"Looking closely at today's numbers, revenue changed by **{rev.get('pct_vs_yesterday', 0):+.1f}%** compared to yesterday. "
-    report += f"This movement closely mirrors our order volume ({ord_.get('pct_vs_yesterday', 0):+.1f}% change with {ord_.get('today_value', 0):,.0f} total orders completed). "
-    report += f"Traffic was recorded at **{trf.get('today_value', 0):,.0f} visits** ({trf.get('pct_vs_yesterday', 0):+.1f}% vs yesterday), showing healthy stability across user acquisition.\n"
+    report += f"This movement closely mirrors our order volume ({ord_.get('pct_vs_yesterday', 0):+.1f}% change with {int(round(ord_.get('today_value', 0))):,} total orders completed). "
+    report += f"Traffic was recorded at **{int(round(trf.get('today_value', 0))):,} visits** ({trf.get('pct_vs_yesterday', 0):+.1f}% vs yesterday), showing healthy stability across user acquisition.\n"
 
     report += "\n### Analyst Recommendations & Next Steps\n"
     report += "1. **Maintain Momentum**: Current marketing spend and traffic ratios are well-aligned.\n"

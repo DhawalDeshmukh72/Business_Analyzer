@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+INTEGER_METRICS = {"traffic", "orders", "refunds", "new_customers"}
+
 def format_date_str(date_str: str) -> str:
     """Formats YYYY-MM-DD to '16 Aug 2026' style."""
     try:
@@ -17,6 +19,13 @@ def format_date_str(date_str: str) -> str:
         return dt.strftime("%d %b %Y")
     except Exception:
         return date_str
+
+
+def format_metric_value(metric_name: str, value: float) -> str:
+    """Formats count metrics as integers and currency/rates with appropriate decimals."""
+    if metric_name in INTEGER_METRICS:
+        return f"{int(round(value)):,}"
+    return f"{value:,.2f}"
 
 
 def convert_markdown_to_clean_html(markdown_text: str) -> str:
@@ -116,11 +125,12 @@ def build_html_email(findings_data: Dict[str, Any], llm_markdown_report: str) ->
         pct = f['pct_vs_yesterday']
         pct_str = f"{pct:+.1f}%" if pct is not None else "N/A"
         pct_color = "#16a34a" if (pct or 0) > 0 else ("#dc2626" if (pct or 0) < 0 else "#64748b")
+        formatted_val = format_metric_value(f['metric'], f['today_value'])
 
         table_rows += f"""
         <tr style="border-bottom: 1px solid #f1f5f9;">
             <td style="padding: 9px 12px; font-weight: 600; color: #1e293b; font-size: 13px;">{f['display_name']}</td>
-            <td style="padding: 9px 12px; color: #334155; font-size: 13px;">{f['today_value']:,.2f}</td>
+            <td style="padding: 9px 12px; color: #334155; font-size: 13px;">{formatted_val}</td>
             <td style="padding: 9px 12px; color: {pct_color}; font-weight: 600; font-size: 13px;">{pct_str}</td>
             <td style="padding: 9px 12px; color: #64748b; font-size: 13px;">{f['pct_vs_7d']:+.1f}%</td>
             <td style="padding: 9px 12px;">
@@ -206,7 +216,6 @@ def send_daily_email(
     html_content = build_html_email(findings_data, llm_markdown_report)
     plain_text = build_plain_text_email(findings_data, llm_markdown_report)
 
-    # Save preview HTML for local verification
     with open(output_preview_file, "w", encoding="utf-8") as f:
         f.write(html_content)
     print(f"[Email Reporter] Report preview saved locally to '{output_preview_file}'.")
@@ -231,7 +240,6 @@ def send_daily_email(
 
         clean_password = sender_password.replace(" ", "")
 
-        # Attach Plain Text first, then HTML second (MIME standard for rich email clients)
         part_text = MIMEText(plain_text, "plain", "utf-8")
         part_html = MIMEText(html_content, "html", "utf-8")
         msg.attach(part_text)
