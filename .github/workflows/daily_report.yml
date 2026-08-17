@@ -2,8 +2,8 @@ name: Daily Business Analyst Automated Run
 
 on:
   schedule:
-    # Runs daily at 08:00 AM UTC (adjust as needed)
-    - cron: '0 8 * * *'
+    # Runs daily at 08:00 AM IST (02:30 AM UTC)
+    - cron: '30 2 * * *'
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
 
 jobs:
