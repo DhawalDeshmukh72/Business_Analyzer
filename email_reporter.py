@@ -220,11 +220,11 @@ def send_daily_email(
         f.write(html_content)
     print(f"[Email Reporter] Report preview saved locally to '{output_preview_file}'.")
 
-    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-    smtp_port = int(os.getenv("SMTP_PORT", 587))
-    sender_email = os.getenv("EMAIL_ADDRESS")
-    sender_password = os.getenv("EMAIL_PASSWORD")
-    recipient_email = os.getenv("RECIPIENT_EMAIL")
+    smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com").strip()
+    smtp_port = int(str(os.getenv("SMTP_PORT", 587)).strip())
+    sender_email = (os.getenv("EMAIL_ADDRESS") or "").strip()
+    sender_password = (os.getenv("EMAIL_PASSWORD") or "").strip()
+    recipient_email = (os.getenv("RECIPIENT_EMAIL") or "").strip()
 
     if not sender_email or not sender_password or not recipient_email:
         print("[Notice] SMTP credentials not fully set in .env. Skipping live email dispatch.")
