@@ -1529,3 +1529,16 @@
 2026-11-24 12:50:56,747 [INFO] ==================================================
 2026-11-24 12:50:56,747 [INFO] DhawalKart Daily Pipeline Completed Successfully!
 2026-11-24 12:50:56,747 [INFO] ==================================================
+2026-11-25 11:37:53,682 [INFO] ==================================================
+2026-11-25 11:37:53,683 [INFO] Starting DhawalKart Daily Business Analyst Pipeline
+2026-11-25 11:37:53,683 [INFO] ==================================================
+2026-11-25 11:37:53,683 [INFO] Step 1: Generating/Verifying daily record for '2026-11-25' (Event: None)...
+2026-11-25 11:37:53,699 [INFO] Daily Data Ready: Traffic=4603, Revenue=₹70,551.64, Orders=127
+2026-11-25 11:37:53,699 [INFO] Step 2: Performing deterministic analysis and anomaly detection...
+2026-11-25 11:37:53,702 [INFO] Analysis Complete: 6 anomalies detected across 8 metrics.
+2026-11-25 11:37:53,702 [INFO] Step 3: Sending structured findings to LLM Business Analyst...
+2026-11-25 11:37:53,702 [INFO] LLM Analyst summary generated successfully.
+2026-11-25 11:37:53,702 [INFO] Step 4: Rendering HTML email report and attempting dispatch...
+2026-11-25 11:37:54,507 [INFO] ==================================================
+2026-11-25 11:37:54,507 [INFO] DhawalKart Daily Pipeline Completed Successfully!
+2026-11-25 11:37:54,507 [INFO] ==================================================
